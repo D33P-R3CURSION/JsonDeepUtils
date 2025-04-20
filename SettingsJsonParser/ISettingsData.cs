@@ -1,6 +1,6 @@
 ﻿namespace SeamSearchLaserScan.Logic.ProjectSettings
 {
-	public abstract class SettingsData
+	public interface ISettingsData
 	{
     }
 }

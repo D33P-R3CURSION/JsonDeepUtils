@@ -7,7 +7,7 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 	public sealed class ProjectSettingsLoader<T>
 	{
 		#region Constructors
-		public ProjectSettingsLoader(SettingsData projectSettings)
+		public ProjectSettingsLoader(ISettingsData projectSettings)
 		{
 			_projectSettingsData = projectSettings;
 
@@ -23,14 +23,22 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 		#endregion Constructors
 
 		#region Properties
-		public SettingsData Settings
+		public T Settings
 		{
 			get
 			{
-				lock (_settingsLock)
+				if (_projectSettingsData is T data)
 				{
-					return _projectSettingsData;
+					lock (_settingsLock)
+					{
+
+						return data;
+					}
 				}
+				else {
+					throw new InvalidOperationException("Не соответсвие типов");
+				}
+
 			}
 		}
 		#endregion Properties
@@ -62,7 +70,7 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 			PropertyInfo[] propertyes = newData.GetType().GetProperties();
 			foreach (PropertyInfo property in propertyes)
 			{
-				if (property.PropertyType.BaseType == typeof(SettingsData))
+				if (property.PropertyType.BaseType == typeof(ISettingsData))
 				{
 					rewriteProperties(property.GetValue(oldData), property.GetValue(newData));
 				}
@@ -75,7 +83,12 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 
 		private void serialization(string fullFilePath, string dir)
 		{
-			string jsonString = JsonConvert.SerializeObject(_projectSettingsData, Formatting.Indented);
+			if (_projectSettingsData is not T projData)
+			{
+				return ;
+			}
+
+			string jsonString = JsonConvert.SerializeObject(projData, Formatting.Indented);
 
 			if (Directory.Exists(dir) == false)
 			{
@@ -92,7 +105,7 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 			try
 			{
                 T? newData = JsonConvert.DeserializeObject<T>(jsonString);
-				if (newData != null && newData is SettingsData settingsData)
+				if (newData != null && newData is ISettingsData settingsData)
 				{
 					rewriteProperties(_projectSettingsData, settingsData);
 					serialization(_jsonFilePath, _settingsDir);
@@ -111,7 +124,7 @@ namespace SeamSearchLaserScan.Logic.ProjectSettings
 		private const string _settingsDir = "Settings";
 		private const string _jsonFileName = "ProjectSettings.json";
 		private string _jsonFilePath => Path.Combine(_settingsDir, _jsonFileName);
-		private SettingsData _projectSettingsData;
+		private ISettingsData _projectSettingsData;
 		#endregion
 	}
 }

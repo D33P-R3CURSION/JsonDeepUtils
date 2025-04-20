@@ -2,7 +2,7 @@
 
 namespace SeamSearchLaserScan.Logic.ProjectSettings
 {
-	public class UIChanger<T> : SettingsData
+	public class UIChanger<T> : ISettingsData
 	{
 		public UIChanger(T value) { Value = value; }
 
