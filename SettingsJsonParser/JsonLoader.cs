@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Reflection;
 
-namespace JsonParser
+namespace JsonDeepUtils
 {
 	public sealed class JsonLoader<T>
 	{

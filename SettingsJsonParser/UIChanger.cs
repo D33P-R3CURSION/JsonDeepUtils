@@ -1,4 +1,4 @@
-﻿namespace JsonParser
+﻿namespace JsonDeepUtils
 {
 	public class UIChanger<T>(T value) : IParseData
 	{

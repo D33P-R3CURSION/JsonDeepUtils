@@ -1,4 +1,4 @@
-﻿using JsonParser;
+﻿using JsonDeepUtils;
 
 namespace SeamSearchLaserScan.Logic.ProjectSettings
 {

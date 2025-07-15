@@ -1,4 +1,4 @@
-﻿namespace JsonParser
+﻿namespace JsonDeepUtils
 {
 	public interface IParseData;
 }
