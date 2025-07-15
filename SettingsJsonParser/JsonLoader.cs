@@ -6,9 +6,11 @@ namespace JsonDeepUtils
 	public sealed class JsonLoader<T>
 	{
 		#region Constructors
-		public JsonLoader(IParseData projectSettings)
+		public JsonLoader(IParseData projectSettings, string dir = "Settings", string filename = "ProjectSettings.json")
 		{
 			_data = projectSettings;
+			_dir = dir;
+			_jsonFileName = filename;
 
 			if (!File.Exists(FilePath))
 			{
@@ -119,9 +121,9 @@ namespace JsonDeepUtils
 		#region Fields
 		private readonly Lock DataLock = new();
 
-		private const string _dir = "Settings";
-		private const string _jsonFileName = "ProjectSettings.json";
-		private static string FilePath => Path.Combine(_dir, _jsonFileName);
+		private string _dir;
+		private string _jsonFileName;
+		private string FilePath => Path.Combine(_dir, _jsonFileName);
 		private readonly IParseData _data;
 		#endregion
 	}
